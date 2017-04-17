@@ -5,11 +5,9 @@ from compiler import Compiler
 
 import datetime, random
 
-width = 960
-height = 480
 
+# preparing the data
 now = int(datetime.datetime.now().timestamp())
-
 points = [[now + i * 60, random.random() * i] for i in range(100)]
 
 min_date = points[0][0]
@@ -18,12 +16,19 @@ max_date = points[len(points) - 1][0]
 min_val = min(points, key=lambda x: x[1])[1]
 max_val = max(points, key=lambda x: x[1])[1]
 
+# chart style options
+width = 960
+height = 480
 padding = 50
 
+# two compilers created
 chart_compiler = Compiler()
 interactive_compiler = Compiler()
 
-# config canvas context
+
+###### codes below is the PencilBox program part ######
+
+# define the config of canvas context
 chart_compiler.compile(
   op.font('14px Helvatica, Arial'),
   op.strokeStyle('rgba(0, 0, 255, 0.8)'),
@@ -67,7 +72,7 @@ codes.append(op.stroke())
 codes.append(op.closePath())
 chart_compiler.compile(*codes)
 
-# handle mouse event
+# handle mouse move event, notice that we are using `interactive_compiler` now
 interactive_compiler.compile(
   op.clearRect(0, 0, width, height),
   op.strokeStyle('rgba(128,200,128,0.8)'),
@@ -102,5 +107,11 @@ interactive_compiler.compile(
   )
   )
 )
+
+# output of main bytecodes
 print(chart_compiler.output())
+
+# output of interactive bytecodes
 print(interactive_compiler.output())
+
+### notice that in real world, we should pass the `bytes` type data to web front end but not `list` of `int` to save bandwidth.
